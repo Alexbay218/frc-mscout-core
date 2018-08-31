@@ -11,7 +11,6 @@ int qrcode_stream::decodeSingular(cv::Mat* inputImage, std::string* modification
     int n = qrscan.scan(zImage);
     if (n > 0) {
         zbar::Image::SymbolIterator firstSymbol = zImage.symbol_begin();
-        std::cout << "QR Code Data: " << firstSymbol->get_data() << std::endl;
         *modification = firstSymbol->get_data();
     }
     return n;

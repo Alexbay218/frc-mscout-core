@@ -1,11 +1,12 @@
 #include "qrcode_stream.h"
+#include "message.h"
 #include <iostream>
 
 int main(int argc, char** argv) {
     std::cout << "Initializing" << std::endl;
     cv::VideoCapture cap;
     qrcode_stream qr;
-    std::string output;
+    message ms;
     std::cout << "Scanner created" << std::endl;
     if(argc > 1) {
         cap.open(argv[0]);
@@ -17,14 +18,17 @@ int main(int argc, char** argv) {
     else {
         cap.open(0);
     }
+    std::string output;
+    cv::Mat frame;
     while(true) {
-        cv::Mat frame;
-        cap.read(frame);
+        cap.grab();
+        cap.retrieve(frame);
         cv::imshow("Video Capture", frame);
-        qr.decodeSingular(&frame, &output);
-
+        if(qr.decodeSingular(&frame, &output) > 0) {
+            std::cout << "Full Hash: " << ms.inputMessage(output) << std::endl;
+        }
 		if(cv::waitKey(1) == 27) {
-            break;
+            ms.clearMessage();
 		}
     }
 }
