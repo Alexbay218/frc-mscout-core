@@ -10,8 +10,10 @@ class message {
         message();
         adler32_hash ad32hash;
         std::vector<std::string> data;
+        std::string targetHash;
+        int targetNumber;
 
-        std::string inputMessage(std::string msg);
+        bool inputMessage(std::string msg);
         void clearMessage();
 
         virtual ~message();
@@ -27,6 +29,8 @@ class message {
         std::string hashData();
         void inputHash(std::string msg);
         void inputData(std::string msg);
+
+        int complete();
 };
 
 #endif // MESSAGE_H
