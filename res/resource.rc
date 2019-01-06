@@ -1,0 +1,24 @@
+id ICON "first.ico"
+1 VERSIONINFO
+FILEVERSION     1,0,0,0
+PRODUCTVERSION  1,0,0,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "080904E4"
+    BEGIN
+      VALUE "CompanyName", "Alexbay218"
+      VALUE "FileDescription", "FRC MScout Core Application"
+      VALUE "FileVersion", "1.0"
+      VALUE "InternalName", "frc-mscout-core"
+      VALUE "LegalCopyright", "Shaun Wu"
+      VALUE "OriginalFilename", "frc-mscout-core.exe"
+      VALUE "ProductName", "FRC MScout Core"
+      VALUE "ProductVersion", "0.11"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x809, 1252
+  END
+END

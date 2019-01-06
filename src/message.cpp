@@ -16,15 +16,15 @@ void message::clearMessage() {
 
 bool message::inputMessage(std::string msg) {
     if(msg != lastIt) {
-        //std::cout << "Inputting Message: " << msg << std::endl;
+        std::cout << "Inputting Message: " << msg << std::endl;
         lastIt = msg;
         iterations++;
-        //std::cout << "Iteration: " << iterations << std::endl;
+        std::cout << "Iteration: " << iterations << std::endl;
         if(hashMessageLength < 0 || hashMessageLength > msg.length()) {
             hashMessageLength = msg.length();
         }
         if(iterations >= 3) {
-            //std::cout << "Length: " << hashMessageLength << std::endl;
+            std::cout << "Length: " << hashMessageLength << std::endl;
             if(msg.length() > hashMessageLength) {
                 inputData(msg);
             }
@@ -33,22 +33,21 @@ bool message::inputMessage(std::string msg) {
             }
         }
         for(int i = 0;i < data.size();i++) {
-            //std::cout << "Data Array " << data[i] << " at " << i << std::endl;
+            std::cout << "Data Array " << data[i] << " at " << i << std::endl;
         }
         for(int i = 0;i < codeHash.size();i++) {
-            //std::cout << "Code Hash Array " << codeHash[i] << " at " << i << std::endl;
+            std::cout << "Code Hash Array " << codeHash[i] << " at " << i << std::endl;
         }
     }
     if(targetNumber != 0) {
         std::cout << "Percentage: " << (static_cast<float> (complete()))/(static_cast<float> (targetNumber*2)) << std::endl;
     }
-    std::cout << ((hashData() == targetHash) && (targetHash.length() == 8)) << std::endl;
     return ((hashData() == targetHash) && (targetHash.length() == 8));
 }
 
 void message::inputData(std::string msg) {
     std::string temp = ad32hash.hashInput(msg);
-    //std::cout << "Data inputted \"" << msg << "\" with hash of " << temp << std::endl;
+    std::cout << "Data inputted \"" << msg << "\" with hash of " << temp << std::endl;
     for(int i = 0;i < codeHash.size();i++) {
         if(temp == codeHash[i]) {
             while(data.size() < i + 1) {

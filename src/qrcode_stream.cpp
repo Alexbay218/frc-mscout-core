@@ -9,7 +9,7 @@ int qrcode_stream::decodeSingular(cv::Mat* inputImage, std::string* modification
     cv::cvtColor(*inputImage, grayImage, CV_BGR2GRAY);
     cv::resize(grayImage, grayImage, cv::Size(), 0.5, 0.5);
     cv::threshold(grayImage, grayImage, 128, 255, 0);
-    cv::imshow("gray", grayImage);
+    cv::imshow("Gray", grayImage);
     zbar::Image zImage(grayImage.cols, grayImage.rows, "Y800", (uchar *)grayImage.data, grayImage.cols * grayImage.rows);
     int n = qrscan.scan(zImage);
     if (n > 0) {
