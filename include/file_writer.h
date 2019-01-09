@@ -16,7 +16,6 @@ class file_writer {
     protected:
 
     private:
-        void check(const fs::path& p, fs::file_status s = fs::file_status{});
 };
 
 #endif // FILE_WRITER_H

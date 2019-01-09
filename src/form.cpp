@@ -1,16 +1,17 @@
 #include "form.h"
 
 form::form() {
-    initPath = fs::current_path().string() + "\\data\\";
+    initPath = fs::current_path().string() + "\\data";
     videoPath = "0";
     videoIsNum = true;
+    bool isScanning = false;
 
     cv::VideoCapture cap;
     qrcode_stream qr;
     message ms;
     file_writer fw;
 
-    nana::form fm(nana::rectangle(20,20,500,360));
+    nana::form fm(nana::rectangle(20,20,500,380));
     fm.caption("FRC MScout Core");
 
     nana::label lb_pathstring(fm, nana::rectangle(10,10,70,25));
@@ -45,110 +46,118 @@ form::form() {
     nana::button bt_start(fm, nana::rectangle(10,110,480,50));
     bt_start.caption("Start QR Code Stream");
     bt_start.events().click([&](){
-        lb_status.caption("Starting Scan");
-        tb_pathstring.getline(0,initPath);
-        tb_videopath.getline(0,videoPath);
-        videoIsNum = cb_videoisnum.checked();
-        bool isFinished = false;
-        bool abort = false;
-        int abortCountdown = 500;
-        if(videoIsNum) {
-            cap.open(std::stoi(videoPath));
-        }
-        else {
-            cap.open(videoPath);
-        }
-        std::string output;
-        cv::Mat frame;
-        int qrx = 0;
-        int qry = 0;
-        cv::Point poi(5,5);
-        cv::Scalar green(0,255,0);
-        cv::Scalar red(0,0,255);
-        while(!isFinished && !abort) {
-            cap.grab();
-            cap.retrieve(frame);
-            lb_status.caption("<bold color=0x005f00>Scanning... " + std::to_string(round(ms.percentage*100)/100) + "% complete </><bold color=0xff0000>(Will abort in " + std::to_string(abortCountdown/20) + ")</>");
-            if(qr.decodeSingular(&frame, &output, &qrx, &qry) > 0) {
-                abortCountdown = 500;
-                if(ms.inputMessage(output)) {
-                    lb_status.caption(writeData(ms.data));
-                    ms.clearMessage();
-                    isFinished = true;
-                }
-                poi.x = qrx;
-                poi.y = qry;
-                cv::circle(frame, poi, 5, green);
+        if(!isScanning) {
+            isScanning = true;
+            lb_status.caption("Starting Scan");
+            tb_pathstring.getline(0,initPath);
+            tb_videopath.getline(0,videoPath);
+            videoIsNum = cb_videoisnum.checked();
+            bool isFinished = false;
+            bool abort = false;
+            int abortCountdown = 200;
+            if(videoIsNum) {
+                cap.open(std::stoi(videoPath));
             }
             else {
-                abortCountdown--;
-                cv::circle(frame, poi, 5, red);
+                cap.open(videoPath);
             }
-            abort = abortCountdown <= 0;
-            cv::imshow("Video Capture", frame);
-            if(cv::waitKey(1) == 27) {
-                ms.clearMessage();
+            std::string output;
+            cv::Mat frame;
+            int qrx = 0;
+            int qry = 0;
+            cv::Point poi(5,5);
+            cv::Scalar green(0,255,0);
+            cv::Scalar red(0,0,255);
+            while(!isFinished && !abort) {
+                cap.grab();
+                cap.retrieve(frame);
+                lb_status.caption("<bold color=0x005f00>Scanning... " + std::to_string(round(ms.percentage*100)/100) + "% complete </><bold color=0xff0000>(Will abort in " + std::to_string(abortCountdown/20) + ")</>");
+                if(qr.decodeSingular(&frame, &output, &qrx, &qry) > 0) {
+                    abortCountdown = 200;
+                    if(ms.inputMessage(output)) {
+                        lb_status.caption(writeData(ms.data));
+                        ms.clearMessage();
+                        isFinished = true;
+                    }
+                    poi.x = qrx;
+                    poi.y = qry;
+                    cv::circle(frame, poi, 5, green);
+                }
+                else {
+                    abortCountdown--;
+                    cv::circle(frame, poi, 5, red);
+                }
+                abort = abortCountdown <= 0;
+                cv::imshow("Video Capture", frame);
+                if(cv::waitKey(1) == 27) {
+                    ms.clearMessage();
+                }
             }
+            if(abort) {
+                lb_status.caption("<bold color=0xff0000>Scan Aborted</>");
+            }
+            cv::destroyWindow("Video Capture");
+            cv::destroyWindow("Gray");
+            cap.release();
+            isScanning = false;
         }
-        if(abort) {
-            lb_status.caption("<bold color=0xff0000>Scan Aborted</>");
-        }
-        cv::destroyWindow("Video Capture");
-        cv::destroyWindow("Gray");
-        cap.release();
     });
 
     nana::button bt_start2(fm, nana::rectangle(10,170,480,50));
     bt_start2.caption("Start Single QR Code");
     bt_start2.events().click([&](){
-        lb_status.caption("Starting Scan");
-        tb_pathstring.getline(0,initPath);
-        tb_videopath.getline(0,videoPath);
-        videoIsNum = cb_videoisnum.checked();
-        bool isFinished = false;
-        bool abort = false;
-        int abortCountdown = 500;
-        if(videoIsNum) {
-            cap.open(std::stoi(videoPath));
-        }
-        else {
-            cap.open(videoPath);
-        }
-        std::string output;
-        cv::Mat frame;
-        int qrx = 0;
-        int qry = 0;
-        cv::Point poi(5,5);
-        cv::Scalar green(0,255,0);
-        cv::Scalar red(0,0,255);
-        while(!isFinished && !abort) {
-            cap.grab();
-            cap.retrieve(frame);
-            lb_status.caption("<bold color=0x005f00>Scanning... " + std::to_string(round(ms.percentage*100)/100) + "% complete </><bold color=0xff0000>(Will abort in " + std::to_string(abortCountdown/20) + ")</>");
-            if(qr.decodeSingular(&frame, &output, &qrx, &qry) > 0) {
-                abortCountdown = 500;
-                lb_status.caption(fw.writeFile(output, initPath));
-                isFinished = true;
-                poi.x = qrx;
-                poi.y = qry;
-                cv::circle(frame, poi, 5, green);
+        if(!isScanning) {
+            isScanning = true;
+            lb_status.caption("Starting Scan");
+            tb_pathstring.getline(0,initPath);
+            tb_videopath.getline(0,videoPath);
+            videoIsNum = cb_videoisnum.checked();
+            bool isFinished = false;
+            bool abort = false;
+            int abortCountdown = 200;
+            if(videoIsNum) {
+                cap.open(std::stoi(videoPath));
             }
             else {
-                abortCountdown--;
-                cv::circle(frame, poi, 5, red);
+                cap.open(videoPath);
             }
-            abort = abortCountdown <= 0;
-            cv::imshow("Video Capture", frame);
-            if(cv::waitKey(1) == 27) {
-                ms.clearMessage();
+            std::string output;
+            cv::Mat frame;
+            int qrx = 0;
+            int qry = 0;
+            cv::Point poi(5,5);
+            cv::Scalar green(0,255,0);
+            cv::Scalar red(0,0,255);
+            while(!isFinished && !abort) {
+                cap.grab();
+                cap.retrieve(frame);
+                lb_status.caption("<bold color=0x005f00>Scanning... </><bold color=0xff0000>(Will abort in " + std::to_string(abortCountdown/20) + ")</>");
+                if(qr.decodeSingular(&frame, &output, &qrx, &qry) > 0) {
+                    abortCountdown = 200;
+                    lb_status.caption(fw.writeFile(output, initPath));
+                    isFinished = true;
+                    poi.x = qrx;
+                    poi.y = qry;
+                    cv::circle(frame, poi, 5, green);
+                }
+                else {
+                    abortCountdown--;
+                    cv::circle(frame, poi, 5, red);
+                }
+                abort = abortCountdown <= 0;
+                cv::imshow("Video Capture", frame);
+                if(cv::waitKey(1) == 27) {
+                    ms.clearMessage();
+                }
             }
+            if(abort) {
+                lb_status.caption("<bold color=0xff0000>Scan Aborted</>");
+            }
+            cv::destroyWindow("Video Capture");
+            cv::destroyWindow("Gray");
+            cap.release();
+            isScanning = false;
         }
-        if(abort) {
-            lb_status.caption("<bold color=0xff0000>Scan Aborted</>");
-        }
-        cv::destroyWindow("Video Capture");
-        cv::destroyWindow("Gray");
-        cap.release();
     });
     fm.show();
     nana::exec();
