@@ -9,11 +9,9 @@
 #include <nana/gui/widgets/textbox.hpp>
 #include <nana/gui/widgets/checkbox.hpp>
 #include <nana/gui/widgets/label.hpp>
-#include <experimental/filesystem>
 #include "message.h"
 #include "qrcode_stream.h"
-
-namespace fs = std::experimental::filesystem;
+#include "file_writer.h"
 
 class form {
     public:
@@ -23,13 +21,14 @@ class form {
     protected:
     private:
         message ms;
+        file_writer fw;
         std::string initPath;
         std::string videoPath;
         std::string defaultFilename;
         bool videoIsNum;
         bool overrideSourceTeam;
 
-        void writeData(std::vector<std::string> input);
+        std::string writeData(std::vector<std::string> input);
 };
 
 #endif // FORM_H

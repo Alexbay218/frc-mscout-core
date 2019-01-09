@@ -5,6 +5,7 @@ message::message() {
 }
 
 void message::clearMessage() {
+    percentage = 0;
     hashMessageLength = -1;
     iterations = 0;
     targetNumber = 0;
@@ -40,7 +41,8 @@ bool message::inputMessage(std::string msg) {
         }
     }
     if(targetNumber != 0) {
-        std::cout << "Percentage: " << (static_cast<float> (complete()))/(static_cast<float> (targetNumber*2)) << std::endl;
+        percentage = (static_cast<float> (complete()))/(static_cast<float> (targetNumber*2));
+        std::cout << "Percentage: " << percentage << std::endl;
     }
     return ((hashData() == targetHash) && (targetHash.length() == 8));
 }

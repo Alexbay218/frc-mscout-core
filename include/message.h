@@ -12,6 +12,7 @@ class message {
         std::vector<std::string> data;
         std::string targetHash;
         int targetNumber;
+        float percentage;
 
         bool inputMessage(std::string msg);
         void clearMessage();
