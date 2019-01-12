@@ -13,13 +13,13 @@ std::string file_writer::writeFile(std::string input, std::string path) {
     inputCopy = inputCopy.substr(inputCopy.find_first_of(";") + 1);
     std::string targetTeam = inputCopy.substr(0,inputCopy.find_first_of(";"));
     inputCopy = inputCopy.substr(inputCopy.find_first_of(";") + 1);
-    std::string matchTime = inputCopy.substr(0,inputCopy.find_first_of(";"));
+    std::string timeStamp = inputCopy.substr(0,inputCopy.find_first_of(";"));
     inputCopy = inputCopy.substr(inputCopy.find_first_of(";") + 1);
     std::string matchType = inputCopy.substr(0,inputCopy.find_first_of(";"));
     inputCopy = inputCopy.substr(inputCopy.find_first_of(";") + 1);
     std::string matchNumber = inputCopy.substr(0,inputCopy.find_first_of(";"));
     inputCopy = inputCopy.substr(inputCopy.find_first_of(";") + 1);
-    std::string filename = matchType + matchNumber + "_" + sourceTeam + ".fmt";
+    std::string filename = matchType + matchNumber + "_" + sourceTeam + "_" + timeStamp +".fmt";
 
     if(!fs::exists(fs::path(path))) {
         std::cout << "Creating Directory: " << path << std::endl;
