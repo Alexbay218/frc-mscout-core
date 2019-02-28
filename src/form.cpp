@@ -88,7 +88,7 @@ form::form() {
                     cv::circle(frame, poi, 5, red);
                 }
                 abort = abortCountdown <= 0;
-                cv::imshow("Video Capture", frame);
+                //cv::imshow("Video Capture", frame);
                 if(cv::waitKey(1) == 27) {
                     ms.clearMessage();
                 }
@@ -96,8 +96,6 @@ form::form() {
             if(abort) {
                 lb_status.caption("<bold color=0xff0000>Scan Aborted</>");
             }
-            cv::destroyWindow("Video Capture");
-            cv::destroyWindow("Gray");
             cap.release();
             isScanning = false;
         }

@@ -15,6 +15,7 @@ class qrcode_stream {
         virtual ~qrcode_stream();
         zbar::ImageScanner qrscan;
         int decodeSingular(cv::Mat* inputImage, std::string* returnData, int* x, int* y);
+        int thresh;
         time_t timer;
     protected:
 
